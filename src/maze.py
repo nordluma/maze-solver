@@ -1,4 +1,5 @@
 import time
+from typing import Union
 
 from cell import Cell
 from graphics import Window
@@ -13,7 +14,7 @@ class Maze:
         num_cols: int,
         cell_size_x: int,
         cell_size_y: int,
-        win: Window,
+        win: Union[Window, None] = None,
     ) -> None:
         self._x1 = x1
         self._y1 = y1
@@ -40,6 +41,9 @@ class Maze:
                 self._draw_cell(i, j)
 
     def _draw_cell(self, i: int, j: int):
+        if not self._win:
+            return
+
         x1 = self._x1 + i * self.cell_size_x
         x2 = x1 + self.cell_size_x
         y1 = self._y1 + j * self.cell_size_y
@@ -49,5 +53,8 @@ class Maze:
         self._animate()
 
     def _animate(self):
+        if not self._win:
+            return
+
         self._win.redraw()
         time.sleep(0.05)
