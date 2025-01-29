@@ -15,6 +15,9 @@ class Cell:
         self._y2 = None
         self._win = win
 
+    def __repr__(self) -> str:
+        return f"cell at x: {self._x1} - {self._x2} y: {self._y1} - {self._y2}"
+
     def draw(self, x1: int, y1: int, x2: int, y2: int):
         if not self._win:
             return
