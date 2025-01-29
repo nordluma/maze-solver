@@ -48,8 +48,16 @@ class Cell:
         if not self._win:
             return
 
-        x_center, y_center = self._get_center()
-        x_center_2, y_center_2 = to_cell._get_center()
+        if not self._x2 or not self._x1 or not self._y2 or not self._y1:
+            return
+
+        half_len = abs(self._x2 - self._x1) // 2
+        x_center = half_len + self._x1
+        y_center = half_len + self._y1
+
+        half_len_2 = abs(to_cell._x2 - to_cell._x1) // 2
+        x_center_2 = half_len_2 + to_cell._x1
+        y_center_2 = half_len_2 + to_cell._y1
 
         fill_color = "red"
         if undo:
@@ -57,12 +65,3 @@ class Cell:
 
         line = Line(Point(x_center, y_center), Point(x_center_2, y_center_2))
         self._win.draw_line(line, fill_color)
-
-    def _get_center(self) -> tuple[int, int]:
-        if not self._x1 or not self._x2 or not self._y1 or not self._y2:
-            raise Exception("Cell has to be drawn before drawing a move")
-        half_len = abs(self._x2 - self._x1) // 2
-        x_center = half_len + self._x1
-        y_center = half_len + self._y1
-
-        return x_center, y_center
