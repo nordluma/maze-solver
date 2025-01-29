@@ -35,6 +35,59 @@ class Maze:
         self._break_walls_r(0, 0)
         self._reset_cells_visited()
 
+    def solve(self) -> bool:
+        return self._solve_r(i=0, j=0)
+
+    def _solve_r(self, i: int, j: int) -> bool:
+        self._animate()
+        current_cell = self._cells[i][j]
+        current_cell.visited = True
+
+        if i == self.num_cols - 1 and j == self.num_rows - 1:
+            return True
+
+        if (
+            i > 0
+            and not self._cells[i][j].has_left_wall
+            and not self._cells[i - 1][j].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i - 1][j])
+            if self._solve_r(i - 1, j):
+                return True
+            self._cells[i][j].draw_move(self._cells[i - 1][j], True)
+
+        if (
+            i < self.num_cols - 1
+            and not self._cells[i][j].has_right_wall
+            and not self._cells[i + 1][j].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i + 1][j])
+            if self._solve_r(i + 1, j):
+                return True
+            self._cells[i][j].draw_move(self._cells[i + 1][j], True)
+
+        if (
+            j > 0
+            and not self._cells[i][j].has_top_wall
+            and not self._cells[i][j - 1].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i][j - 1])
+            if self._solve_r(i, j - 1):
+                return True
+            self._cells[i][j].draw_move(self._cells[i][j - 1], True)
+
+        if (
+            j < self.num_rows - 1
+            and not self._cells[i][j].has_bottom_wall
+            and not self._cells[i][j + 1].visited
+        ):
+            self._cells[i][j].draw_move(self._cells[i][j + 1])
+            if self._solve_r(i, j + 1):
+                return True
+            self._cells[i][j].draw_move(self._cells[i][j + 1], True)
+
+        return False
+
     def _create_cells(self):
         for i in range(self.num_cols):
             column = []
@@ -95,9 +148,7 @@ class Maze:
                 self._draw_cell(i, j)
                 return
 
-            print(f"directions: {next_idx_list}")
             next_idx = next_idx_list[random.randrange(len(next_idx_list))]
-
             if next_idx[0] == i + 1:  # right
                 self._cells[i][j].has_right_wall = False
                 self._cells[i + 1][j].has_left_wall = False
